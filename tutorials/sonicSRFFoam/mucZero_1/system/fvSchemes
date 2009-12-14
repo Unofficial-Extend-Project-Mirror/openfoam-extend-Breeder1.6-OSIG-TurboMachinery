@@ -17,7 +17,9 @@ FoamFile
 
 ddtSchemes
 {
-    default         Euler;
+//     default         Euler;
+    default CoEuler phi rho 0.5; // local time stepping with constant Courant number <mass flux var> <density var> <max local Courant number>
+//     default SLTS phi rho 0.5; // stabelized local time stepping <mass flux var> <density var> <Under-relaxation factor>
 }
 
 gradSchemes
