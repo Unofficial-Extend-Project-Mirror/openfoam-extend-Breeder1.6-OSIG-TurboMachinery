@@ -49,7 +49,7 @@ rotatingSplitVelocityFvPatchVectorField
 )
 :
     fixedValueFvPatchVectorField(p, iF),
-    absoluteValue_(p.size(), vector::zero),
+    absoluteValue_(vector::zero),
     minZ_(0.0),
     maxZ_(0.0),
     minR_(0.0),
@@ -69,7 +69,7 @@ rotatingSplitVelocityFvPatchVectorField
 )
 :
     fixedValueFvPatchVectorField(ptf, p, iF, mapper),
-    absoluteValue_(ptf.absoluteValue_, mapper),
+    absoluteValue_(ptf.absoluteValue_),
     minZ_(ptf.minZ_),
     maxZ_(ptf.maxZ_),
     minR_(ptf.minR_),
@@ -88,7 +88,7 @@ rotatingSplitVelocityFvPatchVectorField
 )
 :
     fixedValueFvPatchVectorField(p, iF),
-    absoluteValue_("absoluteValue", dict, p.size()),
+    absoluteValue_(dict.lookup("absoluteValue")),
     minZ_(readScalar(dict.lookup("minZ"))),
     maxZ_(readScalar(dict.lookup("maxZ"))),
     minR_(readScalar(dict.lookup("minR"))),
@@ -146,17 +146,19 @@ void rotatingSplitVelocityFvPatchVectorField::updateCoeffs()
 
     const vectorField& C = patch().Cf();
 
-    vectorField rotationVelocity = omegaOne_ ^ C;
+    vectorField rotationVelocity = absoluteValue_ - ( omegaOne_ ^ C );
 
     forAll(C, facei)
      {
        scalar r = sqrt(C[facei].y()*C[facei].y() + C[facei].x()*C[facei].x());
 
        if ( ( C[facei].z() > minZ_ ) and ( C[facei].z() < maxZ_ ) and ( r > minR_ ) and ( r < maxR_ ) )
-          rotationVelocity[facei] = omegaTwo_ ^ C[facei];
+       {
+          rotationVelocity[facei] = absoluteValue_ - ( omegaTwo_ ^ C[facei] );
+       }
      }
 
-    operator==(-rotationVelocity + absoluteValue_);
+    operator==(rotationVelocity);
 
     fixedValueFvPatchVectorField::updateCoeffs();
 }
@@ -165,7 +167,7 @@ void rotatingSplitVelocityFvPatchVectorField::updateCoeffs()
 void rotatingSplitVelocityFvPatchVectorField::write(Ostream& os) const
 {
     fvPatchVectorField::write(os);
-    absoluteValue_.writeEntry("absoluteValue", os);
+    os.writeKeyword("absoluteValue")<< absoluteValue_ << token::END_STATEMENT << nl;
     os.writeKeyword("minZ")<< minZ_ << token::END_STATEMENT << nl;
     os.writeKeyword("maxZ")<< maxZ_ << token::END_STATEMENT << nl;
     os.writeKeyword("minR")<< minR_ << token::END_STATEMENT << nl;

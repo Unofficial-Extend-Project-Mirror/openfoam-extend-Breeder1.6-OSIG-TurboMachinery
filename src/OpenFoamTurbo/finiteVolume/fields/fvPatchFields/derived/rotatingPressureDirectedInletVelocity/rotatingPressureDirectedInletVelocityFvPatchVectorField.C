@@ -49,7 +49,9 @@ rotatingPressureDirectedInletVelocityFvPatchVectorField
 )
 :
     fixedValueFvPatchVectorField(p, iF),
-    inletDir_(p.size()),
+    phiName_("phi"),
+    rhoName_("rho"),
+    inletDir_(vector::zero),
     cylindricalCCS_(0),
     omega_(vector::zero)
 {}
@@ -65,7 +67,9 @@ rotatingPressureDirectedInletVelocityFvPatchVectorField
 )
 :
     fixedValueFvPatchVectorField(ptf, p, iF, mapper),
-    inletDir_(ptf.inletDir_, mapper),
+    phiName_(ptf.phiName_),
+    rhoName_(ptf.rhoName_),
+    inletDir_(ptf.inletDir_),
     cylindricalCCS_(ptf.cylindricalCCS_),
     omega_(ptf.omega_)
 {}
@@ -80,7 +84,9 @@ rotatingPressureDirectedInletVelocityFvPatchVectorField
 )
 :
     fixedValueFvPatchVectorField(p, iF),
-    inletDir_("inletDirection", dict, p.size()),
+    phiName_(dict.lookupOrDefault<word>("phi", "phi")),
+    rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
+    inletDir_(dict.lookup("inletDirection")),
     cylindricalCCS_(dict.lookup("cylindricalCCS")),
     omega_(dict.lookup("omega"))
 {
@@ -95,6 +101,8 @@ rotatingPressureDirectedInletVelocityFvPatchVectorField
 )
 :
     fixedValueFvPatchVectorField(pivpvf),
+    phiName_(pivpvf.phiName_),
+    rhoName_(pivpvf.rhoName_),
     inletDir_(pivpvf.inletDir_),
     cylindricalCCS_(pivpvf.cylindricalCCS_),
     omega_(pivpvf.omega_)
@@ -109,6 +117,8 @@ rotatingPressureDirectedInletVelocityFvPatchVectorField
 )
 :
     fixedValueFvPatchVectorField(pivpvf, iF),
+    phiName_(pivpvf.phiName_),
+    rhoName_(pivpvf.rhoName_),
     inletDir_(pivpvf.inletDir_),
     cylindricalCCS_(pivpvf.cylindricalCCS_),
     omega_(pivpvf.omega_)
@@ -116,31 +126,6 @@ rotatingPressureDirectedInletVelocityFvPatchVectorField
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-void rotatingPressureDirectedInletVelocityFvPatchVectorField::autoMap
-(
-    const fvPatchFieldMapper& m
-)
-{
-    fixedValueFvPatchVectorField::autoMap(m);
-    inletDir_.autoMap(m);
-}
-
-
-void rotatingPressureDirectedInletVelocityFvPatchVectorField::rmap
-(
-    const fvPatchVectorField& ptf,
-    const labelList& addr
-)
-{
-    fixedValueFvPatchVectorField::rmap(ptf, addr);
-
-    const rotatingPressureDirectedInletVelocityFvPatchVectorField& tiptf =
-        refCast<const rotatingPressureDirectedInletVelocityFvPatchVectorField>(ptf);
-
-    inletDir_.rmap(tiptf.inletDir_, addr);
-}
-
 
 void rotatingPressureDirectedInletVelocityFvPatchVectorField::updateCoeffs()
 {
@@ -151,11 +136,12 @@ void rotatingPressureDirectedInletVelocityFvPatchVectorField::updateCoeffs()
 
     const vectorField& C = patch().Cf();
     vectorField rotationVelocity = omega_ ^ C;
-    vectorField inletDirComputation_ = inletDir_;
+    vector axisHat = inletDir_/mag(inletDir_);
+    vectorField inletDirComputation_(patch().size(),axisHat);
     scalar radius, cx, cy, cz;
 
     const surfaceScalarField& phi =
-        db().lookupObject<surfaceScalarField>("phi");
+        db().lookupObject<surfaceScalarField>(phiName_);
 
     const fvsPatchField<scalar>& phip =
         patch().patchField<surfaceScalarField, scalar>(phi);
@@ -167,12 +153,12 @@ void rotatingPressureDirectedInletVelocityFvPatchVectorField::updateCoeffs()
      forAll(C, facei)
      {
        radius = sqrt(C[facei].y()*C[facei].y() + C[facei].x()*C[facei].x());
-       cz = inletDir_[facei].z();
+       cz = axisHat.z();
 
        if (radius > 0.0)
        {
-          cx = (C[facei].x()*inletDir_[facei].x() - C[facei].y()*inletDir_[facei].y())/radius;
-          cy = (C[facei].y()*inletDir_[facei].x() + C[facei].x()*inletDir_[facei].y())/radius;
+          cx = (C[facei].x()*axisHat.x() - C[facei].y()*axisHat.y())/radius;
+          cy = (C[facei].y()*axisHat.x() + C[facei].x()*axisHat.y())/radius;
 
           inletDirComputation_[facei] = vector(cx,cy,cz);
        }
@@ -192,7 +178,7 @@ void rotatingPressureDirectedInletVelocityFvPatchVectorField::updateCoeffs()
     else if (phi.dimensions() == dimDensity*dimVelocity*dimArea)
     {
         const fvPatchField<scalar>& rhop =
-            patch().lookupPatchField<volScalarField, scalar>("rho");
+            patch().lookupPatchField<volScalarField, scalar>(rhoName_);
 
         operator==(inletDirComputation_*phip/(rhop*ndmagS) - rotationVelocity);
     }
@@ -215,7 +201,15 @@ void rotatingPressureDirectedInletVelocityFvPatchVectorField::updateCoeffs()
 void rotatingPressureDirectedInletVelocityFvPatchVectorField::write(Ostream& os) const
 {
     fvPatchVectorField::write(os);
-    inletDir_.writeEntry("inletDirection", os);
+    if (phiName_ != "phi")
+    {
+        os.writeKeyword("phi") << phiName_ << token::END_STATEMENT << nl;
+    }
+    if (rhoName_ != "rho")
+    {
+        os.writeKeyword("rho") << rhoName_ << token::END_STATEMENT << nl;
+    }
+    os.writeKeyword("inletDirection") << inletDir_ << token::END_STATEMENT << nl;
     os.writeKeyword("cylindricalCCS") << cylindricalCCS_ << token::END_STATEMENT << nl;
     os.writeKeyword("omega")<< omega_ << token::END_STATEMENT << nl;
     writeEntry("value", os);

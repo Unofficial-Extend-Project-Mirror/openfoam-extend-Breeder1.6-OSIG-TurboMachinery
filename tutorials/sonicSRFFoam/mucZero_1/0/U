@@ -32,7 +32,7 @@ boundaryField
     rotorshroud
     {
         type            rotatingSplitVelocity;
-        absoluteValue   uniform (0 0 0);   // absolute velocity vector of the whole patch
+        absoluteValue   (0 0 0);   // absolute velocity vector of the whole patch
         minZ -3.0;                 // Minimum Z coordinate of bounding box for domain Two
         maxZ 0.325;                 // Maximum Z coordinate of bounding box for domain Two
         minR -0.1;                 // Minimum R coordinate of bounding box for domain Two
@@ -73,12 +73,15 @@ boundaryField
     inlet
     {
 //         type rotatingPressureDirectedInletVelocity;
-//         inletDirection  uniform (0 0 1);	// Direction of absolute velocity in cartesian coordinates
+//         phi             phi;
+//         rho             rho;
+//         inletDirection  (0 0 1);	// Direction of absolute velocity in cartesian coordinates
+//         cylindricalCCS  no;
 //         omega           (0 0 950.0); 		// Angular Frequency
 //         value           uniform (0 0 250.0); 	// Initial Value
 //
         type            rotatingSplitVelocity;
-        absoluteValue   uniform (0 0 167.5);   // absolute velocity vector of the whole patch
+        absoluteValue   (0 0 167.5);   // absolute velocity vector of the whole patch
         minZ -0.1;                 // Minimum Z coordinate of bounding box for domain Two
         maxZ 0.1;                 // Maximum Z coordinate of bounding box for domain Two
         minR -0.1;                 // Minimum R coordinate of bounding box for domain Two

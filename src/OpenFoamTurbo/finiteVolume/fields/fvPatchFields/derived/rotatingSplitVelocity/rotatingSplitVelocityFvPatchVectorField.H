@@ -41,7 +41,7 @@ SourceFiles
     hub
     {
         type            rotatingSplitVelocity;
-        absoluteValue   uniform (0 0 0);   // absolute velocity vector of the whole patch
+        absoluteValue   (0 0 0);   // absolute velocity vector of the whole patch
         minZ 0.05;                 // Minimum Z coordinate of bounding box for domain Two
         maxZ 0.15;                 // Maximum Z coordinate of bounding box for domain Two
         minR 0.01;                 // Minimum R coordinate of bounding box for domain Two
@@ -53,7 +53,6 @@ SourceFiles
     @endverbatim
 
 NOTE:
-      - omegaOne has to be unequal to zero!
       - if absoluteValue is zero, just the rotating velocity in the two domains is determined
       - If you just have one domain, just put the limits of domain Two outside your computation domain.
         This should work, but you have one needless loop, which may notice for a large number of patch faces.
@@ -92,7 +91,7 @@ class rotatingSplitVelocityFvPatchVectorField
     // Private data
 
         //- Inlet value
-        vectorField absoluteValue_;
+        vector absoluteValue_;
 
         //- Minimum Z Position
         scalar minZ_;

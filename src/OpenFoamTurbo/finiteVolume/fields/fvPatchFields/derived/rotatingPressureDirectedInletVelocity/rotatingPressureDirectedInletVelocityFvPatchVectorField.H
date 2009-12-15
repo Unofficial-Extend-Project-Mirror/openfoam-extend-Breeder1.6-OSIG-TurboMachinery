@@ -36,7 +36,9 @@ Description
     inlet
     {
         type rotatingPressureDirectedInletVelocity;
-        inletDirection  uniform (0 0 -1);           // direction of the absolute velocity vector C
+        phi              phi; // Name of the flux field
+        rho              rho; // Name of the density field
+        inletDirection  (0 0 -1);           // direction of the absolute velocity vector C
         // in case of cartesian coordinates it is defined as:   ( Cx/|C| Cy/|C| Cz/|C| );
         // in case of cylindrical coordinates it is defined as: ( Cr/|C| Cu/|C| Cz/|C| );
         cylindricalCCS  yes;                        // Switch between cartesian and cylindrical coordinates
@@ -75,8 +77,14 @@ class rotatingPressureDirectedInletVelocityFvPatchVectorField
     public fixedValueFvPatchVectorField
 {
     // Private data
-    
-        vectorField inletDir_;
+        //- Name of the flux field
+        word phiName_;
+
+        //- Name of the density field
+        word rhoName_;
+
+        //- Normalized velocity direction
+        vector inletDir_;
 
         //- Is the supplied inlet value in cartesian or cylindrical coordinates?
         Switch cylindricalCCS_;
@@ -157,34 +165,32 @@ public:
         }
 
 
-
     // Member functions
 
-        // Mapping functions
+        // Access
 
-            //- Map (and resize as needed) from self given a mapping object
-            virtual void autoMap
-            (
-                const fvPatchFieldMapper&
-            );
-
-            //- Reverse map the given fvPatchField onto this fvPatchField
-            virtual void rmap
-            (
-                const fvPatchVectorField&,
-                const labelList&
-            );
-
-            //- Return the angular velocity of rotation
-            const vector& omega() const
+            //- Return the name of rho
+            const word& rhoName() const
             {
-                return omega_;
+                return rhoName_;
             }
 
-            //- Return the angular velocity of rotation
-            vector& omega()
+            //- Return reference to the name of rho to allow adjustment
+            word& rhoName()
             {
-                return omega_;
+                return rhoName_;
+            }
+
+            //- Return the name of phi
+            const word& phiName() const
+            {
+                return phiName_;
+            }
+
+            //- Return reference to the name of phi to allow adjustment
+            word& phiName()
+            {
+                return phiName_;
             }
 
         //- Update the coefficients associated with the patch field
