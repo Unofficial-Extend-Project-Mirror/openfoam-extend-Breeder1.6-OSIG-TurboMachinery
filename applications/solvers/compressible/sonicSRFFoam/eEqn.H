@@ -1,14 +1,12 @@
 {
-    fvScalarMatrix eEqn
+    solve
     (
         fvm::ddt(rho, e)
       + fvm::div(phi, e)
       - fvm::laplacian(turbulence->alphaEff(), e)
+      ==
+      - p*fvc::div(phi/fvc::interpolate(rho))
     );
-
-    srfZones.addCentrifugal(eEqn);
-
-    solve(eEqn == - p*fvc::div(phi/fvc::interpolate(rho)));
 
     thermo.correct();
 }
