@@ -1,0 +1,3 @@
+transientSimpleDyMFoam.C
+
+EXE = $(FOAM_APPBIN)/transientSimpleDyMFoam
