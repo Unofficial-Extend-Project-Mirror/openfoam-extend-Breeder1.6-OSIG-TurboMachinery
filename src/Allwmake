@@ -5,4 +5,4 @@ set -x
 # Compile libOpenFoamTurbo
 #
 wmake libso OpenFoamTurbo
-
+wmake libso turboPerformance
