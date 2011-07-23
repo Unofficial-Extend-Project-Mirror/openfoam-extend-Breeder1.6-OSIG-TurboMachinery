@@ -51,14 +51,7 @@ solvers
     U
     {
         solver           PBiCG;
-        preconditioner
-        {
-            type            DILU;
-        }
-        smoother
-        {
-            type            DILU;
-        }
+        preconditioner   DILU;
         minIter          1;
         maxIter          4;
         tolerance        1e-07;
@@ -68,14 +61,7 @@ solvers
     k
     {
         solver           PBiCG;
-        preconditioner
-        {
-            type            DILU;
-        }
-        smoother
-        {
-            type            DILU;
-        }
+        preconditioner   DILU;
         minIter          1;
         maxIter          3;
         tolerance        1e-07;
@@ -85,14 +71,7 @@ solvers
     epsilon
     {
         solver           PBiCG;
-        preconditioner
-        {
-            type            DILU;
-        }
-        smoother
-        {
-            type            DILU;
-        }
+        preconditioner   DILU;
         minIter          1;
         maxIter          3;
         tolerance        1e-07;
@@ -102,14 +81,7 @@ solvers
     omega
     {
         solver           PBiCG;
-        preconditioner
-        {
-            type            DILU;
-        }
-        smoother
-        {
-            type            DILU;
-        }
+        preconditioner   DILU;
         minIter          1;
         maxIter          3;
         tolerance        1e-07;
