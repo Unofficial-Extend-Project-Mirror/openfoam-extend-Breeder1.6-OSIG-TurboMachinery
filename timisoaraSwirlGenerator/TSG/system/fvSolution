@@ -19,83 +19,97 @@ FoamFile
 solvers
 {
 
-    p PCG
+    p
     {
+        solver           PCG;
         preconditioner   DIC;
         tolerance        1e-05;
         relTol           0.002;
-	minIter       2;
-	maxIter    140;
+	minIter          2;
+	maxIter          140;
     };
-    pFinal PCG
+    pFinal
     {
+        solver           PCG;
         preconditioner   DIC;
         tolerance        1e-05;
         relTol           0.001;
-	minIter       2;
-	maxIter    280;
+	minIter          2;
+	maxIter          280;
     };
-    pcorr PCG
+    pcorr
     {
+        solver           PCG;
         preconditioner   DIC;
         tolerance        1e-05;
         relTol           0.001;
-	minIter      2;
-	maxIter    180;
+	minIter          2;
+	maxIter          180;
     };
 
 
-    U PBiCG
+    U
     {
+        solver           PBiCG;
         preconditioner
-        { type         DILU;}
-
+        {
+            type            DILU;
+        }
         smoother
-	 { type         DILU; }
-	 
+        {
+            type            DILU;
+        }
         minIter          1;
         maxIter          4;
         tolerance        1e-07;
         relTol           0;
     };
     
-    k PBiCG
+    k
     {
+        solver           PBiCG;
         preconditioner
-        { type         DILU; }
-
+        {
+            type            DILU;
+        }
         smoother
-	 { type         DILU; }
-	 
+        {
+            type            DILU;
+        }
         minIter          1;
         maxIter          3;
         tolerance        1e-07;
         relTol           0;
     };
 
-    epsilon PBiCG
+    epsilon
     {
+        solver           PBiCG;
         preconditioner
-        {  type         DILU; }
-
+        {
+            type            DILU;
+        }
         smoother
-	 { type         DILU; }
-	 
-
+        {
+            type            DILU;
+        }
         minIter          1;
         maxIter          3;
         tolerance        1e-07;
         relTol           0;
     };
 
-    omega PBiCG
+    omega
     {
+        solver           PBiCG;
         preconditioner
-        { type         DILU; }
-
+        {
+            type            DILU;
+        }
         smoother
-	 { type         DILU; }
-	 
+        {
+            type            DILU;
+        }
         minIter          1;
         maxIter          3;
         tolerance        1e-07;
