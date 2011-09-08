@@ -6,3 +6,5 @@ set -x
 #
 wmake libso OpenFoamTurbo
 wmake libso turboPerformance
+wmake libso cylindricalInletVelocity
+wmake libso SRFcylindricalInletVelocity
