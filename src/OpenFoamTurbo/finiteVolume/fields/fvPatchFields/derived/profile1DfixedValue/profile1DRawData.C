@@ -165,6 +165,8 @@ profile1DRawData(std::string nameFile, std::string typeFile) :
     typeFile_(typeFile),
     is_validFlag(false)
 {
+    bool verbose = false;
+
     // Validation of the file path 
     if( access(nameFile_.c_str(), R_OK)==0 )
     {
@@ -175,7 +177,8 @@ profile1DRawData(std::string nameFile, std::string typeFile) :
         {
             std::string buffer;
 
-            Info << "    profile1DRawData:: Reading file : " << nameFile_ << " in turboCSV format" << endl;
+            if(verbose)
+                Info << "    profile1DRawData:: Reading file : " << nameFile_ << " in turboCSV format" << endl;
 
             while(file.good())
             {

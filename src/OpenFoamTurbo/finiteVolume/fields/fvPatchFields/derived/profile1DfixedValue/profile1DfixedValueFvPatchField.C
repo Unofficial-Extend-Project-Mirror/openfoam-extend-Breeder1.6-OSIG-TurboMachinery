@@ -172,9 +172,9 @@ profile1DfixedValueFvPatchField<Type>::profile1DfixedValueFvPatchField
     // This constructor is called by paraFoam at every time step.
     if( debug )
     {
-        Info << "profile1DfixedValueFvPatchField<Type>::profile1DfixedValueFvPatchField(const fvPatch& p, const DimensionedField<Type, volMesh>& iF, const dictionary& dict) " << endl;
-        Info << "profile1D Dict: " << dict << endl;
-        Info << "profile1D Field: " << fieldName_
+        Pout << "profile1DfixedValueFvPatchField<Type>::profile1DfixedValueFvPatchField(const fvPatch& p, const DimensionedField<Type, volMesh>& iF, const dictionary& dict) " << endl;
+        Pout << "profile1D Dict: " << dict << endl;
+        Pout << "profile1D Field: " << fieldName_
              << " - interpolateCoord : " << interpolateCoord_ << " : scaling factor: " << fieldScaleFactor_ << " : time: " << this->db().time().timeName() << endl;
     }
 	
@@ -372,7 +372,7 @@ profile1DfixedValueFvPatchField<Type>::profile1DfixedValueFvPatchField
     mappedOmega_(ptf.mappedOmega_)
 {
     if(debug)
-        Info << "profile1DfixedValueFvPatchField<Type>::profile1DfixedValueFvPatchField(const profile1DfixedValueFvPatchField<Type>& ptf, const DimensionedField<Type, volMesh>& iF)" << endl;
+        Pout << "profile1DfixedValueFvPatchField<Type>::profile1DfixedValueFvPatchField(const profile1DfixedValueFvPatchField<Type>& ptf, const DimensionedField<Type, volMesh>& iF)" << endl;
 	
     fvPatchField<Type>::operator==(profile1DValue_);
 }
@@ -389,6 +389,21 @@ void profile1DfixedValueFvPatchField<Type>::autoMap
 {
     Field<Type>::autoMap(m);
     profile1DValue_.autoMap(m);
+}
+
+template<class Type>
+void profile1DfixedValueFvPatchField<Type>::rmap
+(
+    const fvPatchField<Type>& ptf,
+    const labelList& addr
+)
+{
+    fixedValueFvPatchField<Type>::rmap(ptf, addr);
+
+    const profile1DfixedValueFvPatchField<Type>& tiptf =
+        refCast<const profile1DfixedValueFvPatchField<Type> >(ptf);
+
+    profile1DValue_.rmap(tiptf.profile1DValue_, addr);
 }
 
 
@@ -443,7 +458,7 @@ void profile1DfixedValueFvPatchField<Type>::updateProfileValues()
     {
         // Trace
         if( debug > 5 )
-            Info << "profile1DfixedValueFvPatchField: Face: " << faceI << endl;
+            Pout << "profile1DfixedValueFvPatchField: Face: " << faceI << endl;
 
         // Compute the radius (distance between the center of the face and Z axis, in the X-Y plane
         vector_deltaCentre = faceCentres[faceI] - origCentre;
@@ -478,9 +493,9 @@ void profile1DfixedValueFvPatchField<Type>::updateProfileValues()
 
         if( debug > 5 )
         {
-            Info << "profile1DfixedValueFvPatchField: vector_deltaCentre: " << vector_deltaCentre;
-            Info << "    : magnitude : " << interpolateValue << endl; 
-            Info << "profile1DfixedValueFvPatchField: Bound search for : " << interpolateValue 
+            Pout << "profile1DfixedValueFvPatchField: vector_deltaCentre: " << vector_deltaCentre;
+            Pout << "    : magnitude : " << interpolateValue << endl; 
+            Pout << "profile1DfixedValueFvPatchField: Bound search for : " << interpolateValue 
                 << " in the interval [ " 
                 << *lowerBound << " , "
                 << *upperBound << " ]" << endl;
@@ -537,9 +552,9 @@ void profile1DfixedValueFvPatchField<Type>::updateProfileValues()
                     tensor rot = rotationTensor( X, R );
                     if ( debug > 5 )
                     {
-                        Info << "profile1DfixedValueFvPatchField: radius   : " << radius << endl;
-                        Info << "profile1DfixedValueFvPatchField: cos_teta : " << R[0] << endl;
-                        Info << "profile1DfixedValueFvPatchField: sin_teta : " << R[1] << endl;
+                        Pout << "profile1DfixedValueFvPatchField: radius   : " << radius << endl;
+                        Pout << "profile1DfixedValueFvPatchField: cos_teta : " << R[0] << endl;
+                        Pout << "profile1DfixedValueFvPatchField: sin_teta : " << R[1] << endl;
                     }
                     vector Vcart = transform( rot, Vcyl );
 
