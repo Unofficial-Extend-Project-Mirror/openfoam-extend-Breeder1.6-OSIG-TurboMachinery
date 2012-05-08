@@ -63,7 +63,7 @@ functions
 
         inletPatches (inlet);           // inlet patches, can be multiple
         outletPatches (outlet);       	// outlet patches, can be multiple
-        patches (roter);     		// rotor/impeller patches, again can be multiple
+        patches (rotor);     		// rotor/impeller patches, again can be multiple
 
         rhoInf 998.0;                   // density
         CofR (0 0 0);                   // center of rotation
