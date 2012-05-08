@@ -1,14 +1,14 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
-| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  1.5                                   |
-|   \\  /    A nd           | Web:      http://www.OpenFOAM.org               |
+| \\      /  F ield         | OpenFOAM Extend Project: Open Source CFD        |
+|  \\    /   O peration     | Version:  1.6-ext                               |
+|   \\  /    A nd           | Web:      www.extend-project.de                 |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
     version     2.0;
-    `format'      ascii;
+    format      ascii;
     class       dictionary;
     object      blockMeshDict;
 }
@@ -16,7 +16,8 @@ FoamFile
 // General macros to create 2D/extruded-2D meshes
 
 changecom(//)changequote([,])
-define(calc, [esyscmd(perl -e 'print ($1)')])
+define(calc, [esyscmd(perl -e 'printf ($1)')])
+//define(calc, [esyscmd(echo $1 | bc | tr -d \\n)])
 define(VCOUNT, 0)
 define(vlabel, [[// ]Vertex $1 = VCOUNT define($1, VCOUNT)define([VCOUNT], incr(VCOUNT))])
 define(pi, 3.14159265)
