@@ -1,8 +1,8 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
-| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  1.5                                   |
-|   \\  /    A nd           | Web:      http://www.OpenFOAM.org               |
+| \\      /  F ield         | OpenFOAM Extend Project: Open Source CFD        |
+|  \\    /   O peration     | Version:  1.6-ext                               |
+|   \\  /    A nd           | Web:      www.extend-project.de                 |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
 FoamFile
@@ -55,7 +55,7 @@ functions
         type turboPerformance;
         functionObjectLibs ("libturboPerformance.so");
 
-        turbine false;             // Turbine mode, (false if Pump)   
+        turbine false;             // Turbine mode, (false if Pump)
 
         log true;                  // write data to screen (true/false)
         outputControl timeStep;    // write data to file (same options as case output)
@@ -86,7 +86,7 @@ functions
         outputControl timeStep;    // write data to file (same options as case output)
         outputInterval 1;          // interval to write data to file
 
-        inletPatches (inlet); 
+        inletPatches (inlet);
         outletPatches (outlet);
         rhoInf 998.0;
     }
@@ -100,11 +100,10 @@ functions
         outputControl timeStep;    // write data to file (same options as case output)
         outputInterval 1;          // interval to write data to file
 
-        patches (rotor);    
+        patches (rotor);
         rhoInf 998.0;
-        CofR (0 0 0); 
+        CofR (0 0 0);
     }
-
 
  );
 
