@@ -9,7 +9,7 @@ import pylab as pl
 
 def addToPlots( timeName ):
 	fileName = timeName+'/turboPerformance.dat'
-	time, head, TOmega, eff, Fx, Fy, Fz = pl.load( fileName ,skiprows=1,usecols=(0,1,2,3,4,5,6),unpack=True )
+	time, head, TOmega, eff, Fx, Fy, Fz = pl.mlab.load( fileName ,skiprows=1,usecols=(0,1,2,3,4,5,6),unpack=True )
 	
 	pl.figure(1);
 	pl.plot( time, head )  # fig1 active
