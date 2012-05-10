@@ -7,7 +7,7 @@ $(derivedFvPatchFields)/profile1DfixedValue/profile1DfixedValueFvPatchFields.C
 $(derivedFvPatchFields)/profile1DfixedValue/profile1DRawData.C
 $(derivedFvPatchFields)/rotatingPressureDirectedInletVelocity/rotatingPressureDirectedInletVelocityFvPatchVectorField.C
 $(derivedFvPatchFields)/rotatingSplitVelocity/rotatingSplitVelocityFvPatchVectorField.C
-//$(derivedFvPatchFields)/rotatingTotalTemperature/rotatingTotalTemperatureFvPatchScalarField.C
+/*$(derivedFvPatchFields)/rotatingTotalTemperature/rotatingTotalTemperatureFvPatchScalarField.C*/
 
 cfdTools = $(finiteVolume)/cfdTools
 generalCfdTools = $(cfdTools)/general
